@@ -1,4 +1,4 @@
-# Report for assignment 4
+# Report for assignment 4 Group 28
 
 This is a template for your report. You are free to modify it as needed.
 It is not required to use markdown for your report either, but the report
@@ -10,17 +10,85 @@ Name: Pandas
 
 URL: https://github.com/pandas-dev/pandas
 
-One or two sentences describing it
+One or two sentences describing it:
+
+**pandas** is a Python package that provides fast, flexible, and expressive data
+structures designed to make working with "relational" or "labeled" data both
+easy and intuitive. It aims to be the fundamental high-level building block for
+doing practical, **real world** data analysis in Python. Additionally, it has
+the broader goal of becoming **the most powerful and flexible open source data
+analysis / manipulation tool available in any language**. It is already well on
+its way towards this goal.
 
 ## Onboarding experience
 
-Did you choose a new project or continue on the previous one? we chose a new project
+1. Did you choose a new project or continue on the previous one? 
 
-If you changed the project, how did your experience differ from before?
+We chose a new project.
+
+2. If you changed the project, how did your experience differ from before?
+
+Our project for assignment 3 was a collection of algorithms, so it did not require any setup. In difference to pandas, which require many dependencies and a special developing setup. Furthermore, the pandas project is much more complex and difficult to understand, while the algorithms project was very straightforward.
 
 ## Effort spent
 
 For each team member, how much time was spent in
+
+### Jennifer
+
+1. plenary discussions/meetings;
+
+2. discussions within parts of the group;
+
+3. reading documentation;
+
+4. configuration and setup;
+
+5. analyzing code/output;
+
+6. writing documentation;
+
+7. writing code;
+
+8. running code?
+
+### Maegan
+
+1. plenary discussions/meetings;
+
+2. discussions within parts of the group;
+
+3. reading documentation;
+
+4. configuration and setup;
+
+5. analyzing code/output;
+
+6. writing documentation;
+
+7. writing code;
+
+8. running code?
+
+### Michaela
+
+1. plenary discussions/meetings;
+
+2. discussions within parts of the group;
+
+3. reading documentation;
+
+4. configuration and setup;
+
+5. analyzing code/output;
+
+6. writing documentation;
+
+7. writing code;
+
+8. running code?
+
+### Karlis
 
 1. plenary discussions/meetings;
 
@@ -54,6 +122,8 @@ Previously, specifying the index for a new column was mandatory when inserting d
 
 Scope (functionality and code affected).
 
+insert is used in the class Dataframe, which is a very common pandas type. So the changes in this issue affects all df.insert calls.
+
 ## Requirements for the new feature or requirements affected by functionality being refactored
 
 Optional (point 3): trace tests to requirements.
@@ -67,7 +137,60 @@ Optional (point 3): trace tests to requirements.
 
 (copy your changes or the add git command to show them)
 
-git diff ...
+**frame.py**
+
+```
+def insert(
+        self,
+        column: Hashable,
+        value: Scalar | AnyArrayLike,
+        loc: int = -1,
+        allow_duplicates: bool | lib.NoDefault = lib.no_default,
+    ) -> None:
+
+    ...
+
+    if allow_duplicates is lib.no_default:
+            allow_duplicates = False
+        if allow_duplicates and not self.flags.allows_duplicate_labels:
+            raise ValueError(
+                "Cannot specify 'allow_duplicates=True' when "
+                "'self.flags.allows_duplicate_labels' is False."
+            )
+        if not allow_duplicates and column in self.columns:
+            # Should this be a different kind of error??
+            raise ValueError(f"cannot insert {column}, already exists")
+        if not isinstance(loc, int):
+            raise TypeError("loc must be int")
+        if loc < 0:
+            loc = len(self.columns)
+
+        value = self._sanitize_column(value)
+        self._mgr.insert(loc, column, value)
+```
+
+**test_insert.py**
+
+```
+    ...
+
+    def test_insert_no_index(self):
+        df = DataFrame()
+        df.insert("A", ["g", "h", "i"], allow_duplicates=True)
+        df.insert("A", ["d", "e", "f"], allow_duplicates=True)
+        df.insert("A", ["a", "b", "c"], allow_duplicates=True)
+        exp = DataFrame(
+            [["g", "d", "a"], ["h", "e", "b"], ["i", "f", "c"]], columns=["A", "A", "A"]
+        )
+        tm.assert_frame_equal(df, exp)
+
+    def test_insert_back(self):
+        # test case to check that loc argument has a default value of -1
+        df = DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
+        df.insert("c", [7, 8, 9])
+        exp = DataFrame({"a": [1, 2, 3], "b": [4, 5, 6], "c": [7, 8, 9]})
+        tm.assert_frame_equal(df, exp)
+```
 
 Optional (point 4): the patch is clean.
 
@@ -77,6 +200,20 @@ Optional (point 5): considered for acceptance (passes all automated checks).
 
 Overall results with link to a copy or excerpt of the logs (before/after
 refactoring).
+
+1. The before test logs can be found [here](https://github.com/mimatts/pandas/blob/main/pandas/tests/frame/indexing/test-log-before.xml).
+
+    Summary:
+    * 6 passed
+    * 0 failed
+    * 0 skipped
+
+2. The after test logs can be found [here]().
+
+    Summary:
+    * 8 passed
+    * 0 failed
+    * 0 skipped
 
 ## UML class diagram and its description
 
@@ -90,7 +227,16 @@ Optional (point 2): relation to design pattern(s).
 
 What are your main take-aways from this project? What did you learn?
 
+Our main take-aways from this project are:
+1. It can be difficult to navigate and understand a complex existing project. It took us a lot of time to understand the functionalities of different functions/classes/files.
+2. It was difficult to find an issue with an appropriate scope for this assignment. 
+3. All the issues in the issue tracker do not describe an actual issue with the code. Some issues in the issue tracker report expected behaviour as bugs. We had this problem with the first issue that we picked.
+
 How did you grow as a team, using the Essence standard to evaluate yourself?
+
+The Essence checklist can be found [here](https://docs.google.com/document/d/1cplATiqxmItaO3Zb8u7uR8hS3H0rga7LcexPhgCMHXA/edit?usp=sharing).
+
+We are currently in the state *in place* according to the Essence standard. Since the last assignment, we have had a chance to work more as a team instead. There has been many small decisions to make, which has made us have more meetings with shorter notice, and in general be more agile. There is still room for improvement, but the team work has definately improved since the last assignment.
 
 Optional (point 6): How would you put your work in context with best software engineering practice?
 
