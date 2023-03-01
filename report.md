@@ -90,21 +90,21 @@ For each team member, how much time was spent in
 
 ### Karlis
 
-1. plenary discussions/meetings;
+1. plenary discussions/meetings 3hrs;
 
-2. discussions within parts of the group;
+2. discussions within parts of the group 3hrs;
 
-3. reading documentation;
+3. reading documentation 3hrs;
 
-4. configuration and setup;
+4. configuration and setup way too long, 3hrs;
 
-5. analyzing code/output;
+5. analyzing code/output, 5hrs;
 
-6. writing documentation;
+6. writing documentation 1hrs;
 
-7. writing code;
+7. writing code 3hrs;
 
-8. running code?
+8. running code? -
 
 For setting up tools and libraries (step 4), enumerate all dependencies
 you took care of and where you spent your time, if that time exceeds
