@@ -57,6 +57,9 @@ Scope (functionality and code affected).
 ## Requirements for the new feature or requirements affected by functionality being refactored
 
 Optional (point 3): trace tests to requirements.
+1. The insertion function needs to be reworked to make the parameter index optional.
+2. To ensure that the added column is placed at the last index, tests should be created. 
+3. Additionally, previous tests should be modified to accommodate the new parameter layout in the insertion function. 
 
 ## Code changes
 
