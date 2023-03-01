@@ -225,6 +225,18 @@ refactoring).
 
 The class we were working on is part of one of the main pandas classes located under pandas/core/frame.py which creates the main structure everyone who uses this library uses for creating their data structures. The diagram was created using the Diagrams.net extension in PyCharm 
 
+Since the file has over 5000 lines of code, generating a proper UML diagram for the DataFrame class with all the methods isn't realistic, so we didn't add the 
+
+def insert(
+        self,
+        column: Hashable,
+        value: Scalar | AnyArrayLike,
+        loc: int = -1,
+        allow_duplicates: bool | lib.NoDefault = lib.no_default,
+    ) -> None:
+    
+    function which we worked on, but this function, which we worked on, is located in frame.py and is one of many frame.py functions
+
 ![image](https://user-images.githubusercontent.com/59483828/222268436-6873393d-1059-4084-a223-1a547578164b.png)
 
 
