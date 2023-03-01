@@ -223,6 +223,11 @@ refactoring).
 
 ## UML class diagram and its description
 
+The class we were working on is part of one of the main pandas classes located under pandas/core/frame.py which creates the main structure everyone who uses this library uses for creating their data structures. The diagram was created using the Diagrams.net extension in PyCharm 
+
+![image](https://user-images.githubusercontent.com/59483828/222268436-6873393d-1059-4084-a223-1a547578164b.png)
+
+
 ### Key changes/classes affected
 
 Optional (point 1): Architectural overview.
