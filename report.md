@@ -226,7 +226,7 @@ refactoring).
 The class we were working on is part of one of the main pandas classes located under pandas/core/frame.py which creates the main structure everyone who uses this library uses for creating their data structures. The diagram was created using the Diagrams.net extension in PyCharm 
 
 Since the file has over 5000 lines of code, generating a proper UML diagram for the DataFrame class with all the methods isn't realistic, so we didn't add the   
-function which we worked on, but this function, which we worked on, is located in frame.py and is one of many frame.py functions
+function which we worked on, but this function, which we worked on, is located in frame.py and is one of many frame.py functions. As we can see the DataFrame class is the base class which extends into more specific data structures that the pandas library offers.
 
 def insert(
         self,
