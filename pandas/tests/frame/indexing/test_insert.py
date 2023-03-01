@@ -113,3 +113,10 @@ class TestDataFrameInsert:
             [["g", "d", "a"], ["h", "e", "b"], ["i", "f", "c"]], columns=["A", "A", "A"]
         )
         tm.assert_frame_equal(df, exp)
+
+    def test_insert_back(self):
+        # test case to check that loc argument has a default value of -1
+        df = DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
+        df.insert("c", [7, 8, 9])
+        exp = DataFrame({"a": [1, 2, 3], "b": [4, 5, 6], "c": [7, 8, 9]})
+        tm.assert_frame_equal(df, exp)
