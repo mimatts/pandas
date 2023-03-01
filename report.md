@@ -124,6 +124,12 @@ Scope (functionality and code affected).
 
 insert is used in the class Dataframe, which is a very common pandas type. So the changes in this issue affects all df.insert calls.
 
+We intitially chose another issue ->
+Title: BUG: pivot_table with margins=True changes dtypes of dates
+URL: https://github.com/pandas-dev/pandas/issues/51581
+
+We managed to find a case that actually contradicted the initial issue, we made a comment on it to the author and afterwards some other people joined the discussion and ended up closing this issue since it was not a bug but rather something that would be expected to happen. It was then closed as completed! For more details please see the URL above and the comments made there.
+
 ## Requirements for the new feature or requirements affected by functionality being refactored
 
 Optional (point 3): trace tests to requirements.
