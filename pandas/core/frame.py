@@ -4694,9 +4694,9 @@ class DataFrame(NDFrame, OpsMixin):
 
     def insert(
         self,
-        loc: int,
         column: Hashable,
         value: Scalar | AnyArrayLike,
+        loc: int = -1,
         allow_duplicates: bool | lib.NoDefault = lib.no_default,
     ) -> None:
         """
@@ -4725,12 +4725,12 @@ class DataFrame(NDFrame, OpsMixin):
            col1  col2
         0     1     3
         1     2     4
-        >>> df.insert(1, "newcol", [99, 99])
+        >>> df.insert("newcol", [99, 99], 1)
         >>> df
            col1  newcol  col2
         0     1      99     3
         1     2      99     4
-        >>> df.insert(0, "col1", [100, 100], allow_duplicates=True)
+        >>> df.insert("col1", [100, 100], 0, allow_duplicates=True)
         >>> df
            col1  col1  newcol  col2
         0   100     1      99     3
@@ -4738,7 +4738,7 @@ class DataFrame(NDFrame, OpsMixin):
 
         Notice that pandas uses index alignment in case of `value` from type `Series`:
 
-        >>> df.insert(0, "col0", pd.Series([5, 6], index=[1, 2]))
+        >>> df.insert("col0", pd.Series([5, 6], index=[1, 2]), 1)
         >>> df
            col0  col1  col1  newcol  col2
         0   NaN   100     1      99     3
@@ -4756,6 +4756,8 @@ class DataFrame(NDFrame, OpsMixin):
             raise ValueError(f"cannot insert {column}, already exists")
         if not isinstance(loc, int):
             raise TypeError("loc must be int")
+        if loc < 0:
+            loc = len(self.columns)
 
         value = self._sanitize_column(value)
         self._mgr.insert(loc, column, value)
@@ -5633,14 +5635,14 @@ class DataFrame(NDFrame, OpsMixin):
                     # TODO(EA2D): doing this in a loop unnecessary with 2D EAs
                     # Define filler inside loop so we get a copy
                     filler = self.iloc[:, 0].shift(len(self))
-                    result.insert(0, label, filler, allow_duplicates=True)
+                    result.insert(label, filler, 0, allow_duplicates=True)
             else:
                 result = self.iloc[:, -periods:]
                 for col in range(min(ncols, abs(periods))):
                     # Define filler inside loop so we get a copy
                     filler = self.iloc[:, -1].shift(len(self))
                     result.insert(
-                        len(result.columns), label, filler, allow_duplicates=True
+                        label, filler, len(result.columns), allow_duplicates=True
                     )
 
             result.columns = self.columns.copy()
@@ -6189,9 +6191,9 @@ class DataFrame(NDFrame, OpsMixin):
                     )
 
                 new_obj.insert(
-                    0,
                     name,
                     level_values,
+                    0,
                     allow_duplicates=allow_duplicates,
                 )
 
