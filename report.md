@@ -152,8 +152,21 @@ def insert(
 
 The class we were working on is part of one of the main pandas classes located under pandas/core/frame.py which creates the main structure everyone who uses this library uses for creating their data structures. The diagram was created using the Diagrams.net extension in PyCharm 
 
-Since the file has over 5000 lines of code, generating a proper UML diagram for the DataFrame class with all the methods isn't realistic, so we didn't add the   
-function which we worked on, but this function, which we worked on, is located in frame.py and is one of many frame.py functions. As we can see the DataFrame class is the base class which extends into more specific data structures that the pandas library offers.
+This function, which we worked on, is located in frame.py and is one of many DataFrame class'es frame.py functions. As we can see the DataFrame class is a more specific class which inherits from other base super classes. So our insert method doesn't impact the superclasses but just the actual DataFrame class which is one of the most important classes and the most used classes in the pandas library
+
+EDIT: added more detailed description of UML diagram. For each of the classes in the diagram:
+
+The DataFrame class is a 2-dimensional size-mutable tabular data structure with rows and columns. It is one of the most commonly used data structures in pandas and is used for data cleaning, manipulation, and analysis.
+
+The NDFrame class and NDFrame structure stands for N-dimensional Frame, which means it is designed to work with data that has more than one dimension. It is a flexible and efficient container for storing and manipulating large and complex datasets.
+
+The OpsMixin class provides a set of common arithmetic and comparison methods for pandas objects, such as Series and DataFrame. The purpose of the OpsMixin class is to provide a consistent and efficient way to perform arithmetic and comparison operations across different pandas objects. Some of the methods provided by the OpsMixin class include:
+
+The PandasObject class in the pandas Python library is an abstract base class that serves as the base class for many of the core data structures in pandas, such as Series, DataFrame, and Index.
+
+The IndexingMixin class is used to provide a consistent and efficient way to perform indexing and selection operations across different pandas objects
+
+The  DirNamesMixin class is to provide a consistent and efficient way to access the names of columns or indexes across different pandas objects.
 
 def insert(
         self,
