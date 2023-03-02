@@ -1,16 +1,12 @@
 # Report for assignment 4 Group 28
 
-This is a template for your report. You are free to modify it as needed.
-It is not required to use markdown for your report either, but the report
-has to be delivered in a standard, cross-platform format.
-
 ## Project
 
-Name: Pandas
+**Name**: Pandas
 
-URL: https://github.com/pandas-dev/pandas
+**URL**: https://github.com/pandas-dev/pandas
 
-One or two sentences describing it:
+**Summary**
 
 **pandas** is a Python package that provides fast, flexible, and expressive data
 structures designed to make working with "relational" or "labeled" data both
@@ -24,115 +20,55 @@ its way towards this goal.
 
 1. Did you choose a new project or continue on the previous one? 
 
-We chose a new project.
+    We chose a new project, *pandas* instead of our old project *TheAlgorithms/Python*.
 
 2. If you changed the project, how did your experience differ from before?
 
-Our project for assignment 3 was a collection of algorithms, so it did not require any setup. In difference to pandas, which require many dependencies and a special developing setup. Furthermore, the pandas project is much more complex and difficult to understand, while the algorithms project was very straightforward.
+    Our project for assignment 3 was a collection of algorithms, so it did not require any setup. In difference to pandas, which require many dependencies and a special developing setup. Furthermore, the pandas project is much more complex and difficult to understand, while the algorithms project was very straightforward.
 
 ## Effort spent
 
-For each team member, how much time was spent in
+An overview of how much time each group member spent on different activities:
 
-### Jennifer
-
-1. plenary discussions/meetings;
-
-2. discussions within parts of the group;
-
-3. reading documentation;
-
-4. configuration and setup;
-
-5. analyzing code/output;
-
-6. writing documentation;
-
-7. writing code;
-
-8. running code?
-
-### Maegan
-
-1. plenary discussions/meetings;
-
-2. discussions within parts of the group;
-
-3. reading documentation;
-
-4. configuration and setup;
-
-5. analyzing code/output;
-
-6. writing documentation;
-
-7. writing code;
-
-8. running code?
-
-### Michaela
-
-1. plenary discussions/meetings;
-
-2. discussions within parts of the group;
-
-3. reading documentation;
-
-4. configuration and setup;
-
-5. analyzing code/output;
-
-6. writing documentation;
-
-7. writing code;
-
-8. running code?
-
-### Karlis
-
-1. plenary discussions/meetings 3hrs;
-
-2. discussions within parts of the group 3hrs;
-
-3. reading documentation 3hrs;
-
-4. configuration and setup way too long, 3hrs;
-
-5. analyzing code/output, 5hrs;
-
-6. writing documentation 1hrs;
-
-7. writing code 3hrs;
-
-8. running code? -
-
-For setting up tools and libraries (step 4), enumerate all dependencies
-you took care of and where you spent your time, if that time exceeds
-30 minutes.
+| **Activity** | **Jennifer Larsson** | **Michaela Mattsson** | **Maegan Peralta** | **Karlis Kristofers Velins** |
+| ------------ | ------------ | ------------ | ---------- | ---------- |
+| **Plenary discussions/meetings** | 4h | | | 3h |
+| **Discussions within parts of the group** | 2h | | | 3h | 
+| **Reading documentation** | 2h | | | 3h |
+| **Configuration and setup** | 2h | | | 3h | 
+| **Analyzing code/output** | 6h | | | 5h |
+| **Writing documentation** | 2h | | | 1h |
+| **Writing code** | 2h | | | 3h |
+| **Running code** | - | | | - |
 
 ## Overview of issue(s) and work done.
 
-Title: Default negative location in pandas insert
+1. **Enhancement issue**
 
-URL: https://github.com/pandas-dev/pandas/issues/49496
+    **Title**: Default negative location in pandas insert
 
-Summary in one or two sentences
+    **URL**: https://github.com/pandas-dev/pandas/issues/49496
 
-Previously, specifying the index for a new column was mandatory when inserting data. In order to improve the functionality, an enhancement was made to modify the insertion process. This enhancement enables the insertion of arguments without the need for a specified index and by default, the data set will be added at the end.
+    **Summary**
 
-Scope (functionality and code affected).
+    Previously, specifying the index for a new column was mandatory when inserting data. In order to improve the functionality, an enhancement was made to modify the insertion process. This enhancement enables the insertion of arguments without the need for a specified index and by default, the data set will be added at the end.
 
-insert is used in the class Dataframe, which is a very common pandas type. So the changes in this issue affects all df.insert calls.
+    **Scope** 
 
-We intitially chose another issue ->
-Title: BUG: pivot_table with margins=True changes dtypes of dates
-URL: https://github.com/pandas-dev/pandas/issues/51581
+    insert is used in the class Dataframe, which is a very common pandas type. So the changes in this issue affects all df.insert calls.
 
-We managed to find a case that actually contradicted the initial issue, we made a comment on it to the author and afterwards some other people joined the discussion and ended up closing this issue since it was not a bug but rather something that would be expected to happen. It was then closed as completed! For more details please see the URL above and the comments made there.
+2. **Bug issue**
+
+    We intitially chose another issue
+
+    **Title**: BUG: pivot_table with margins=True changes dtypes of dates
+
+    **URL**: https://github.com/pandas-dev/pandas/issues/51581
+
+    We managed to find a case that actually contradicted the initial issue, we made a comment on it to the author and afterwards some other people joined the discussion and ended up closing this issue since it was not a bug but rather something that would be expected to happen. It was then closed as completed! For more details please see the URL above and the comments made there.
 
 ## Requirements for the new feature or requirements affected by functionality being refactored
 
-Optional (point 3): trace tests to requirements.
 1. The insertion function needs to be reworked to make the parameter index optional.
 2. To ensure that the added column is placed at the last index, tests should be created. 
 3. Additionally, previous tests should be modified to accommodate the new parameter layout in the insertion function. 
@@ -140,8 +76,6 @@ Optional (point 3): trace tests to requirements.
 ## Code changes
 
 ### Patch
-
-(copy your changes or the add git command to show them)
 
 **frame.py**
 
@@ -198,25 +132,18 @@ def insert(
         tm.assert_frame_equal(df, exp)
 ```
 
-Optional (point 4): the patch is clean.
-
-Optional (point 5): considered for acceptance (passes all automated checks).
-
 ## Test results
-
-Overall results with link to a copy or excerpt of the logs (before/after
-refactoring).
 
 1. The before test logs can be found [here](https://github.com/mimatts/pandas/blob/main/pandas/tests/frame/indexing/test-log-before.xml).
 
-    Summary:
+    **Summary**:
     * 6 passed
     * 0 failed
     * 0 skipped
 
 2. The after test logs can be found [here](https://github.com/mimatts/pandas/blob/main/pandas/tests/frame/indexing/test-data-after.xml).
 
-    Summary:
+    **Summary**:
     * 8 passed
     * 0 failed
     * 0 skipped
@@ -240,13 +167,6 @@ def insert(
 
 ![image](https://user-images.githubusercontent.com/59483828/222268436-6873393d-1059-4084-a223-1a547578164b.png)
 
-
-### Key changes/classes affected
-
-Optional (point 1): Architectural overview.
-
-Optional (point 2): relation to design pattern(s).
-
 ## Overall experience
 
 What are your main take-aways from this project? What did you learn?
@@ -262,6 +182,3 @@ The Essence checklist can be found [here](https://docs.google.com/document/d/1cp
 
 We are currently in the state *in place* according to the Essence standard. Since the last assignment, we have had a chance to work more as a team instead. There has been many small decisions to make, which has made us have more meetings with shorter notice, and in general be more agile. There is still room for improvement, but the team work has definately improved since the last assignment.
 
-Optional (point 6): How would you put your work in context with best software engineering practice?
-
-Optional (point 7): Is there something special you want to mention here?
