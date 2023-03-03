@@ -32,14 +32,14 @@ An overview of how much time each group member spent on different activities:
 
 | **Activity** | **Jennifer Larsson** | **Michaela Mattsson** | **Maegan Peralta** | **Karlis Kristofers Velins** |
 | ------------ | ------------ | ------------ | ---------- | ---------- |
-| **Plenary discussions/meetings** | 4h | | | 3h |
-| **Discussions within parts of the group** | 2h | | | 3h | 
-| **Reading documentation** | 2h | | | 3h |
-| **Configuration and setup** | 2h | | | 3h | 
-| **Analyzing code/output** | 6h | | | 5h |
-| **Writing documentation** | 2h | | | 1h |
-| **Writing code** | 2h | | | 3h |
-| **Running code** | - | | | - |
+| **Plenary discussions/meetings** | 4h | | 4h | 3h |
+| **Discussions within parts of the group** | 2h | | 2h | 3h | 
+| **Reading documentation** | 2h | | 2h | 3h |
+| **Configuration and setup** | 2h | | 3h | 3h | 
+| **Analyzing code/output** | 6h | | 5h | 5h |
+| **Writing documentation** | 2h | | 1h | 1h |
+| **Writing code** | 2h | | 2h | 3h |
+| **Running code** | - | | - | - |
 
 ## Overview of issue(s) and work done.
 
