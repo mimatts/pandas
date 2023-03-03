@@ -32,13 +32,13 @@ An overview of how much time each group member spent on different activities:
 
 | **Activity** | **Jennifer Larsson** | **Michaela Mattsson** | **Maegan Peralta** | **Karlis Kristofers Velins** |
 | ------------ | ------------ | ------------ | ---------- | ---------- |
-| **Plenary discussions/meetings** | 4h | | 4h | 3h |
-| **Discussions within parts of the group** | 2h | | 2h | 3h | 
-| **Reading documentation** | 2h | | 2h | 3h |
-| **Configuration and setup** | 2h | | 3h | 3h | 
-| **Analyzing code/output** | 6h | | 5h | 5h |
-| **Writing documentation** | 2h | | 1h | 1h |
-| **Writing code** | 2h | | 2h | 3h |
+| **Plenary discussions/meetings** | 4h | 4h | 4h | 3h |
+| **Discussions within parts of the group** | 2h | 2h | 2h | 3h | 
+| **Reading documentation** | 2h | 3h | 2h | 3h |
+| **Configuration and setup** | 2h | 5h | 3h | 3h | 
+| **Analyzing code/output** | 6h | 4h | 5h | 5h |
+| **Writing documentation** | 2h | 2h| 1h | 1h |
+| **Writing code** | 2h | 1h | 2h | 3h |
 | **Running code** | - | | - | - |
 
 ## Overview of issue(s) and work done.
@@ -79,58 +79,180 @@ An overview of how much time each group member spent on different activities:
 
 **frame.py**
 
-```
-def insert(
-        self,
-        column: Hashable,
-        value: Scalar | AnyArrayLike,
-        loc: int = -1,
-        allow_duplicates: bool | lib.NoDefault = lib.no_default,
-    ) -> None:
-
-    ...
-
-    if allow_duplicates is lib.no_default:
-            allow_duplicates = False
-        if allow_duplicates and not self.flags.allows_duplicate_labels:
-            raise ValueError(
-                "Cannot specify 'allow_duplicates=True' when "
-                "'self.flags.allows_duplicate_labels' is False."
-            )
-        if not allow_duplicates and column in self.columns:
-            # Should this be a different kind of error??
-            raise ValueError(f"cannot insert {column}, already exists")
-        if not isinstance(loc, int):
-            raise TypeError("loc must be int")
-        if loc < 0:
-            loc = len(self.columns)
-
-        value = self._sanitize_column(value)
-        self._mgr.insert(loc, column, value)
+```diff
+--- frame.py	2023-03-03 09:31:40.000000000 +0100
++++ frame.py	2023-03-03 09:29:09.000000000 +0100
+@@ -4694,9 +4694,9 @@
+ 
+     def insert(
+         self,
+-        loc: int,
+         column: Hashable,
+         value: Scalar | AnyArrayLike,
++        loc: int = -1,
+         allow_duplicates: bool | lib.NoDefault = lib.no_default,
+     ) -> None:
+         """
+@@ -4725,12 +4725,12 @@
+            col1  col2
+         0     1     3
+         1     2     4
+-        >>> df.insert(1, "newcol", [99, 99])
++        >>> df.insert("newcol", [99, 99], 1)
+         >>> df
+            col1  newcol  col2
+         0     1      99     3
+         1     2      99     4
+-        >>> df.insert(0, "col1", [100, 100], allow_duplicates=True)
++        >>> df.insert("col1", [100, 100], 0, allow_duplicates=True)
+         >>> df
+            col1  col1  newcol  col2
+         0   100     1      99     3
+@@ -4738,7 +4738,7 @@
+ 
+         Notice that pandas uses index alignment in case of `value` from type `Series`:
+ 
+-        >>> df.insert(0, "col0", pd.Series([5, 6], index=[1, 2]))
++        >>> df.insert("col0", pd.Series([5, 6], index=[1, 2]), 1)
+         >>> df
+            col0  col1  col1  newcol  col2
+         0   NaN   100     1      99     3
+@@ -4756,6 +4756,8 @@
+             raise ValueError(f"cannot insert {column}, already exists")
+         if not isinstance(loc, int):
+             raise TypeError("loc must be int")
++        if loc < 0:
++            loc = len(self.columns)
+ 
+         value = self._sanitize_column(value)
+         self._mgr.insert(loc, column, value)
+@@ -5633,14 +5635,14 @@
+                     # TODO(EA2D): doing this in a loop unnecessary with 2D EAs
+                     # Define filler inside loop so we get a copy
+                     filler = self.iloc[:, 0].shift(len(self))
+-                    result.insert(0, label, filler, allow_duplicates=True)
++                    result.insert(label, filler, 0, allow_duplicates=True)
+             else:
+                 result = self.iloc[:, -periods:]
+                 for col in range(min(ncols, abs(periods))):
+                     # Define filler inside loop so we get a copy
+                     filler = self.iloc[:, -1].shift(len(self))
+                     result.insert(
+-                        len(result.columns), label, filler, allow_duplicates=True
++                        label, filler, len(result.columns), allow_duplicates=True
+                     )
+ 
+             result.columns = self.columns.copy()
+@@ -6189,9 +6191,9 @@
+                     )
+ 
+                 new_obj.insert(
+-                    0,
+                     name,
+                     level_values,
++                    0,
+                     allow_duplicates=allow_duplicates,
+                 )
+ 
+@@ -11586,4 +11588,4 @@
+         raise TypeError(
+             "incompatible index of inserted column with frame index"
+         ) from err
+-    return reindexed_value
++    return reindexed_value
 ```
 
 **test_insert.py**
 
+```diff
+--- test_insert.py	2023-03-03 09:04:37.000000000 +0100
++++ test_insert.py	2023-03-03 09:03:00.000000000 +0100
+@@ -21,24 +21,24 @@
+             np.random.randn(5, 3), index=np.arange(5), columns=["c", "b", "a"]
+         )
+ 
+-        df.insert(0, "foo", df["a"])
++        df.insert("foo", df["a"], 0)
+         tm.assert_index_equal(df.columns, Index(["foo", "c", "b", "a"]))
+         tm.assert_series_equal(df["a"], df["foo"], check_names=False)
+ 
+-        df.insert(2, "bar", df["c"])
++        df.insert("bar", df["c"], 2)
+         tm.assert_index_equal(df.columns, Index(["foo", "c", "bar", "b", "a"]))
+         tm.assert_almost_equal(df["c"], df["bar"], check_names=False)
+ 
+         with pytest.raises(ValueError, match="already exists"):
+-            df.insert(1, "a", df["b"])
++            df.insert("a", df["b"], 1)
+ 
+         msg = "cannot insert c, already exists"
+         with pytest.raises(ValueError, match=msg):
+-            df.insert(1, "c", df["b"])
++            df.insert("c", df["b"], 1)
+ 
+         df.columns.name = "some_name"
+         # preserve columns name field
+-        df.insert(0, "baz", df["c"])
++        df.insert("baz", df["c"], 0)
+         assert df.columns.name == "some_name"
+ 
+     def test_insert_column_bug_4032(self):
+@@ -46,14 +46,14 @@
+         df = DataFrame({"b": [1.1, 2.2]})
+ 
+         df = df.rename(columns={})
+-        df.insert(0, "a", [1, 2])
++        df.insert("a", [1, 2], 0)
+         result = df.rename(columns={})
+ 
+         str(result)
+         expected = DataFrame([[1, 1.1], [2, 2.2]], columns=["a", "b"])
+         tm.assert_frame_equal(result, expected)
+ 
+-        df.insert(0, "c", [1.3, 2.3])
++        df.insert("c", [1.3, 2.3], 0)
+         result = df.rename(columns={})
+ 
+         str(result)
+@@ -63,9 +63,9 @@
+     def test_insert_with_columns_dups(self):
+         # GH#14291
+         df = DataFrame()
+-        df.insert(0, "A", ["g", "h", "i"], allow_duplicates=True)
+-        df.insert(0, "A", ["d", "e", "f"], allow_duplicates=True)
+-        df.insert(0, "A", ["a", "b", "c"], allow_duplicates=True)
++        df.insert("A", ["g", "h", "i"], 0, allow_duplicates=True)
++        df.insert("A", ["d", "e", "f"], 0, allow_duplicates=True)
++        df.insert("A", ["a", "b", "c"], 0, allow_duplicates=True)
+         exp = DataFrame(
+             [["a", "d", "g"], ["b", "e", "h"], ["c", "f", "i"]], columns=["A", "A", "A"]
+         )
+@@ -102,4 +102,21 @@
+ 
+         msg = r"Expected a 1D array, got an array with shape \(2, 2\)"
+         with pytest.raises(ValueError, match=msg):
+-            df.insert(1, "newcol", df)
+\ No newline at end of file
++            df.insert("newcol", df, 1)
++
++    def test_insert_no_index(self):
++        df = DataFrame()
++        df.insert("A", ["g", "h", "i"], allow_duplicates=True)
++        df.insert("A", ["d", "e", "f"], allow_duplicates=True)
++        df.insert("A", ["a", "b", "c"], allow_duplicates=True)
++        exp = DataFrame(
++            [["g", "d", "a"], ["h", "e", "b"], ["i", "f", "c"]], columns=["A", "A", "A"]
++        )
++        tm.assert_frame_equal(df, exp)
++
++    def test_insert_back(self):
++        # test case to check that loc argument has a default value of -1
++        df = DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
++        df.insert("c", [7, 8, 9])
++        exp = DataFrame({"a": [1, 2, 3], "b": [4, 5, 6], "c": [7, 8, 9]})
++        tm.assert_frame_equal(df, exp)
 ```
-    ...
 
-    def test_insert_no_index(self):
-        df = DataFrame()
-        df.insert("A", ["g", "h", "i"], allow_duplicates=True)
-        df.insert("A", ["d", "e", "f"], allow_duplicates=True)
-        df.insert("A", ["a", "b", "c"], allow_duplicates=True)
-        exp = DataFrame(
-            [["g", "d", "a"], ["h", "e", "b"], ["i", "f", "c"]], columns=["A", "A", "A"]
-        )
-        tm.assert_frame_equal(df, exp)
-
-    def test_insert_back(self):
-        # test case to check that loc argument has a default value of -1
-        df = DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
-        df.insert("c", [7, 8, 9])
-        exp = DataFrame({"a": [1, 2, 3], "b": [4, 5, 6], "c": [7, 8, 9]})
-        tm.assert_frame_equal(df, exp)
-```
 
 ## Test results
 
@@ -188,6 +310,7 @@ Our main take-aways from this project are:
 1. It can be difficult to navigate and understand a complex existing project. It took us a lot of time to understand the functionalities of different functions/classes/files.
 2. It was difficult to find an issue with an appropriate scope for this assignment. 
 3. All the issues in the issue tracker do not describe an actual issue with the code. Some issues in the issue tracker report expected behaviour as bugs. We had this problem with the first issue that we picked.
+
 
 How did you grow as a team, using the Essence standard to evaluate yourself?
 
